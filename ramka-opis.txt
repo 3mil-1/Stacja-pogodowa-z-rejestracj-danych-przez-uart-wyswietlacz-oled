@@ -1,0 +1,10 @@
+
+Ustalono format ramki przesyłanej przez płytke, sprecyzowano ramke o długości i+8+N  w zależności od typów danych. Ramka zabezpieczona
+jest przed przypadkowym odczytaniem i zakłóceniami sumą kontrolną oraz bajtem startu 0xAA. 
+i - start ramki (0xAA)
+i+1 - typ ramki(0x01- temp(dlugosc 2bajty), 0x02 - wilgotnosc(dlugosc 2bajty), 0x03 - cisnienie(dlugosc 4 bajty))
+i+2 - licznik ramek
+i+3 - i+6 -  czas od startu programu
+i+7 - dlugosc danych N
+i+8  - i+7+N - dane
+i+8+N - suma kontrolna

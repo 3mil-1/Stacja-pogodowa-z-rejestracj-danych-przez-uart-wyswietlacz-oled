@@ -7,4 +7,4 @@ i+2 - licznik ramek
 i+3 - i+6 -  czas od startu programu
 i+7 - dlugosc danych N
 i+8  - i+7+N - dane
-i+8+N - suma kontrolna
+i+8+N - suma kontrolnad

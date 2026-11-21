@@ -2,7 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <cstdint>
-
+#include <memory>
 class Ramka{
     protected:
     std::vector<uint8_t> ramka_;
@@ -47,18 +47,40 @@ while(strumien.get(c)){
 std::size_t i=0;
 std::size_t dlugosc =0;
 std::uint8_t znak = 0;
-
+std::vector<std::unique_ptr<Ramka>> gotowe_ramki;
 while( i <  wczytane.size()){
     znak = wczytane[i];
-    if (znak == 0xAA && wczytane[i+7]){
+    if (znak == 0xAA && i + 7 < wczytane.size() && (wczytane[i + 7] == 2 || wczytane[i + 7] == 4) && i + 8 + wczytane[i + 7] < wczytane.size()){
         dlugosc = wczytane[i+7];
         std::uint8_t suma=0;
-        for(std::size_t u=i; u<(i+dlugosc+8);u++){
+        for(std::size_t u=i+1; u<(i+dlugosc+8);u++){
             suma=wczytane[u]+suma;
         }
-        if (suma = wczytane[i+8+dlugosc]){
-            
+        std::vector<uint8_t> dane;
+        if (suma == wczytane[i+8+dlugosc]){
+                for(std::size_t u=i;u<=(i+dlugosc+8);u++){
+                    dane.push_back(wczytane[u]);
+                }
+                switch(dane[1]){
+                    case(0x01):
+                        gotowe_ramki.push_back(std::make_unique<Ramka_temp>(dane));
+                        i=i+9+dlugosc;
+                        break;
+                    case(0x02):
+                        gotowe_ramki.push_back(std::make_unique<Ramka_wilg>(dane));
+                        i = i+9+dlugosc;
+                        break;
+                    case(0x03):
+                        gotowe_ramki.push_back(std::make_unique<Ramka_cisn>(dane));
+                        i=i+9+dlugosc;
+                        break;
+                    default:
+                        i=i+9+dlugosc;
+                        break;
+                }
+                continue;
         }
         
     }
+    i++;
 }

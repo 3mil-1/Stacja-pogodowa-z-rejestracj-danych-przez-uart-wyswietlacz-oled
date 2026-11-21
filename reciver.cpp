@@ -18,19 +18,25 @@ class Ramka{
     uint8_t numer()const{return ramka_[2];}
     uint32_t czas()const{return sklej_cztery(3);}
     virtual double wartosc() const = 0;
+    virtual ~Ramka() = default;
 };
 class Ramka_temp : public Ramka  {
     public:
-     Ramka_temp (const std::vector<uint8_t>& ramka):Ramka(ramka){}
-    double wartosc()const{return()}
-
+    Ramka_temp (const std::vector<uint8_t>& ramka):Ramka(ramka){}
+    double wartosc()const{return(static_cast<double>(static_cast<int16_t>(sklej_dwie(8))) / 100.0);}
+};
+class Ramka_wilg : public Ramka{
+    public:
+    Ramka_wilg(const std::vector<uint8_t>& ramka):Ramka(ramka){}
+    double wartosc() const{return(static_cast<double>((sklej_dwie(8)))/100.0);}
+};
+class Ramka_cisn : public Ramka{
+    public:
+    Ramka_cisn(const std::vector<uint8_t>& ramka):Ramka(ramka){}
+    double wartosc() const {return(static_cast<double>(sklej_cztery(8))/100.0);}
 };
 
-
-
-
 int main()
-
 {
 std::ifstream strumien("test.bin", std::ios::binary);
 char c;
@@ -55,4 +61,4 @@ while( i <  wczytane.size()){
         }
         
     }
-}    
+}

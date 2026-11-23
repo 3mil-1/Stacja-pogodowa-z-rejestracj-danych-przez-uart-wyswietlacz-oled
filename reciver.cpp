@@ -13,28 +13,47 @@ class Ramka{
     uint32_t sklej_cztery(std::size_t indeks)const{
         return(static_cast<uint32_t>(ramka_[indeks])| static_cast<uint32_t>(ramka_[indeks+1])<<8|static_cast<uint32_t>(ramka_[indeks+2])<<16|static_cast<uint32_t>(ramka_[indeks+3])<<24);
     }
+    
     public:
     uint8_t typ()const{return ramka_[1];}
     uint8_t numer()const{return ramka_[2];}
     uint32_t czas()const{return sklej_cztery(3);}
     virtual double wartosc() const = 0;
+    virtual std::string jednostka() const = 0;
     virtual ~Ramka() = default;
+    void wypisz(std::ostream& wyjscie){
+        wyjscie<<wartosc()<<" "<<jednostka()<<"\n";
+    }
+
 };
 class Ramka_temp : public Ramka  {
     public:
     Ramka_temp (const std::vector<uint8_t>& ramka):Ramka(ramka){}
     double wartosc()const{return(static_cast<double>(static_cast<int16_t>(sklej_dwie(8))) / 100.0);}
+    std::string jednostka()const{return("stopnie C");}
 };
 class Ramka_wilg : public Ramka{
     public:
     Ramka_wilg(const std::vector<uint8_t>& ramka):Ramka(ramka){}
     double wartosc() const{return(static_cast<double>((sklej_dwie(8)))/100.0);}
+    std::string jednostka()const{return("wilgotnosc");}
 };
 class Ramka_cisn : public Ramka{
     public:
     Ramka_cisn(const std::vector<uint8_t>& ramka):Ramka(ramka){}
     double wartosc() const {return(static_cast<double>(sklej_cztery(8))/100.0);}
+    std::string jednostka()const{return("hPa");}
 };
+
+void wypisz_i_zapisz(const std::vector<std::unique_ptr<Ramka>>& gotowe_ramki){
+    std::ofstream log("log.txt");
+    for(const auto&a:gotowe_ramki){
+        a->wypisz(log);
+        a->wypisz(std::cout);
+    }
+}
+
+
 
 int main()
 {
@@ -84,3 +103,5 @@ while( i <  wczytane.size()){
     }
     i++;
 }
+    wypisz_i_zapisz(gotowe_ramki);}
+
